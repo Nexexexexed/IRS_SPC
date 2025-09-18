@@ -4,13 +4,13 @@ import { fetchCitizens, fetchCitizenById } from "../../services/api/citizens";
 export const loadCitizens = createAsyncThunk(
   "citizens/loadCitizens",
   async ({ page, size, filters }) => {
-    const responce = await fetchCitizens({ page, size, filters });
-    return responce;
+    const response = await fetchCitizens({ page, size, filters });
+    return response;
   }
 );
 
-export const loadCitizensDetails = createAsyncThunk(
-  "citizens/loadCitizensDetails",
+export const loadCitizenDetails = createAsyncThunk(
+  "citizens/loadCitizenDetails",
   async (id) => {
     const citizen = await fetchCitizenById(id);
     return citizen;
@@ -18,11 +18,12 @@ export const loadCitizensDetails = createAsyncThunk(
 );
 
 const citizensSlice = createSlice({
-  name: "citizen",
+  name: "citizens",
   initialState: {
     list: [],
     currentCitizen: null,
     loading: false,
+    loadingDetails: false,
     error: null,
     pagination: {
       currentPage: 0,
@@ -42,25 +43,35 @@ const citizensSlice = createSlice({
     clearCurrentCitizen: (state) => {
       state.currentCitizen = null;
     },
-    extraReducers: (builder) => {
-      builder
-        .addCase(loadCitizens.pending, (state) => {
-          state.loading = true;
-          state.error = false;
-        })
-        .addCase(loadCitizens.fulfilled, (state, action) => {
-          state.loading = false;
-          state.list = action.payload.data;
-          state.pagination.totalCount = action.payload.totalCount;
-        })
-        .addCase(loadCitizens.rejected, (state, action) => {
-          state.loading = false;
-          state.error = action.error.message;
-        })
-        .addCase(loadCitizensDetails.fulfilled, (state, action) => {
-          state.currentCitizen = action.payload;
-        });
-    },
+  },
+
+  extraReducers: (builder) => {
+    builder
+      .addCase(loadCitizens.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(loadCitizens.fulfilled, (state, action) => {
+        state.loading = false;
+        state.list = action.payload.data;
+        state.pagination.totalCount = action.payload.totalCount;
+      })
+      .addCase(loadCitizens.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(loadCitizenDetails.pending, (state) => {
+        state.loadingDetails = true;
+        state.error = null;
+      })
+      .addCase(loadCitizenDetails.fulfilled, (state, action) => {
+        state.loadingDetails = false;
+        state.currentCitizen = action.payload;
+      })
+      .addCase(loadCitizenDetails.rejected, (state, action) => {
+        state.loadingDetails = false;
+        state.error = action.error.message;
+      });
   },
 });
 
