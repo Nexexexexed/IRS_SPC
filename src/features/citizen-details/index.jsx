@@ -1,18 +1,14 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   loadCitizenDetails,
   clearCurrentCitizen,
 } from "../../store/slices/citizensSlice";
-import {
-  Box,
-  Typography,
-  Button,
-  Paper,
-  CircularProgress,
-  Alert,
-} from "@mui/material";
+import Card from "../../components/UI/Card/Card";
+import Button from "../../components/UI/Button/Button";
+import Alert from "../../components/UI/Alert/Alert";
+import "./details.css";
 
 const CitizenDetails = () => {
   const { id } = useParams();
@@ -23,112 +19,63 @@ const CitizenDetails = () => {
   );
 
   useEffect(() => {
-    if (id) {
-      dispatch(loadCitizenDetails(id));
-    }
-
-    return () => {
-      dispatch(clearCurrentCitizen());
-    };
+    if (id) dispatch(loadCitizenDetails(id));
+    return () => dispatch(clearCurrentCitizen());
   }, [dispatch, id]);
 
-  if (loadingDetails) {
-    return (
-      <Box sx={{ display: "flex", justifyContent: "center", p: 3 }}>
-        <CircularProgress />
-        <Typography sx={{ ml: 2 }}>Загрузка данных...</Typography>
-      </Box>
-    );
-  }
-
-  if (error) {
-    return (
-      <Box sx={{ p: 3 }}>
-        <Alert severity="error">Ошибка загрузки данных: {error}</Alert>
-        <Button
-          variant="outlined"
-          onClick={() => navigate("/citizens")}
-          sx={{ mt: 2 }}
-        >
-          ← Назад к списку
-        </Button>
-      </Box>
-    );
-  }
-
-  if (!currentCitizen) {
-    return (
-      <Box sx={{ p: 3 }}>
-        <Alert severity="warning">Гражданин не найден</Alert>
-        <Button
-          variant="outlined"
-          onClick={() => navigate("/citizens")}
-          sx={{ mt: 2 }}
-        >
-          ← Назад к списку
-        </Button>
-      </Box>
-    );
-  }
+  if (loadingDetails) return <p>Загрузка данных...</p>;
+  if (error) return <Alert type="error">{error}</Alert>;
+  if (!currentCitizen) return <Alert type="warning">Гражданин не найден</Alert>;
 
   return (
-    <Box sx={{ p: 3 }}>
-      <Button
-        variant="outlined"
-        onClick={() => navigate("/citizens")}
-        sx={{ mb: 2 }}
-      >
+    <div className="container">
+      <Button variant="outline" onClick={() => navigate("/citizens")}>
         ← Назад к списку
       </Button>
 
-      <Paper sx={{ p: 3 }}>
-        <Typography variant="h4" gutterBottom>
+      <Card>
+        {currentCitizen.gender === "Мужской" ? (
+          <img
+            className="image_person"
+            alt="person_photo"
+            src="/public/profiles/man_profile.jpg"
+          />
+        ) : (
+          <img
+            className="image_person"
+            alt="person_photo"
+            src="/public/profiles/woman_profile.jpg"
+          />
+        )}
+        <h2>
           {currentCitizen.lastName} {currentCitizen.firstName}{" "}
           {currentCitizen.middleName}
-        </Typography>
+        </h2>
 
-        <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
-          Основная информация
-        </Typography>
-
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-            gap: 2,
-          }}
-        >
-          <div>
-            <Typography>
-              <strong>Дата рождения:</strong>{" "}
-              {new Date(currentCitizen.birthDate).toLocaleDateString("ru-RU")}
-            </Typography>
-            <Typography>
-              <strong>Пол:</strong> {currentCitizen.gender}
-            </Typography>
-            <Typography>
-              <strong>СНИЛС:</strong> {currentCitizen.snils}
-            </Typography>
-          </div>
-          <div>
-            <Typography>
-              <strong>Статус:</strong> {currentCitizen.status}
-            </Typography>
-            <Typography>
-              <strong>Телефон:</strong> {currentCitizen.phone}
-            </Typography>
-            <Typography>
-              <strong>Email:</strong> {currentCitizen.email}
-            </Typography>
-          </div>
-        </Box>
-
-        <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
-          Адрес
-        </Typography>
-        <Typography>{currentCitizen.address}</Typography>
-      </Paper>
-    </Box>
+        <p>
+          <strong>Дата рождения:</strong>{" "}
+          {new Date(currentCitizen.birthDate).toLocaleDateString("ru-RU")}
+        </p>
+        <p>
+          <strong>Пол:</strong> {currentCitizen.gender}
+        </p>
+        <p>
+          <strong>СНИЛС:</strong> {currentCitizen.snils}
+        </p>
+        <p>
+          <strong>Статус:</strong> {currentCitizen.status}
+        </p>
+        <p>
+          <strong>Телефон:</strong> {currentCitizen.phone}
+        </p>
+        <p>
+          <strong>Email:</strong> {currentCitizen.email}
+        </p>
+        <p>
+          <strong>Адрес:</strong> {currentCitizen.address}
+        </p>
+      </Card>
+    </div>
   );
 };
 

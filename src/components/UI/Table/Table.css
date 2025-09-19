@@ -1,0 +1,25 @@
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+  background-color: #fff;
+}
+
+.table th,
+.table td {
+  border: 1px solid #ddd;
+  padding: 0.5rem 1rem;
+  text-align: left;
+}
+
+.table th {
+  background: var(--primary-color);
+  font-weight: 600;
+  border: 1px solid;
+  color: #fff;
+}
+
+.table-row:hover {
+  background: #f0f8ff;
+  cursor: pointer;
+}

@@ -1,0 +1,21 @@
+.alert {
+  padding: 1rem 1.5rem;
+  border-radius: var(--border-radius);
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.alert.info {
+  background-color: var(--alert-info);
+  color: var(--primary-color);
+}
+
+.alert.error {
+  background-color: var(--alert-error);
+  color: #d32f2f;
+}
+
+.alert.warning {
+  background-color: var(--alert-warning);
+  color: #ff9800;
+}

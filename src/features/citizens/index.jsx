@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
@@ -8,7 +8,7 @@ import {
 } from "../../store/slices/citizensSlice";
 import CitizensTable from "./components/CitizensTable";
 import Filters from "./components/Filters";
-import { Box, Typography, CircularProgress, Alert } from "@mui/material";
+import Alert from "../../components/UI/Alert/Alert";
 
 const Citizens = () => {
   const dispatch = useDispatch();
@@ -31,43 +31,22 @@ const Citizens = () => {
     dispatch(setFilters(newFilters));
   };
 
-  const handlePageChange = (newPage, newPageSize = pagination.pageSize) => {
+  const handlePageChange = (newPage) => {
     dispatch(
-      setPagination({
-        currentPage: newPage,
-        pageSize: newPageSize,
-      })
+      setPagination({ currentPage: newPage, pageSize: pagination.pageSize })
     );
   };
 
-  const handleRowClick = (citizenId) => {
-    navigate(`/citizens/${citizenId}`);
-  };
-
-  if (error) {
-    return (
-      <Box sx={{ p: 3 }}>
-        <Alert severity="error">Ошибка загрузки данных: {error}</Alert>
-      </Box>
-    );
-  }
+  const handleRowClick = (id) => navigate(`/citizens/${id}`);
 
   return (
-    <Box sx={{ p: 3 }}>
-      <Typography variant="h4" component="h1" gutterBottom>
-        Картотека граждан
-      </Typography>
-
-      <Typography variant="subtitle1" color="textSecondary" gutterBottom>
-        Всего записей: {pagination.totalCount.toLocaleString("ru-RU")}
-      </Typography>
+    <div className="container">
+      {error && <Alert type="error">{error}</Alert>}
 
       <Filters onFilterChange={handleFilterChange} />
 
       {loading ? (
-        <Box sx={{ display: "flex", justifyContent: "center", p: 3 }}>
-          <CircularProgress />
-        </Box>
+        <p>Загрузка данных...</p>
       ) : (
         <CitizensTable
           data={list}
@@ -76,7 +55,7 @@ const Citizens = () => {
           onPageChange={handlePageChange}
         />
       )}
-    </Box>
+    </div>
   );
 };
 

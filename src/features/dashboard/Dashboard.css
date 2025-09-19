@@ -1,0 +1,37 @@
+h1 {
+  margin-bottom: 1.5em;
+}
+
+.total {
+  font-size: 1.75em;
+  color: var(--primary-color);
+  font-weight: 700;
+  text-align: center;
+}
+
+.cards {
+  display: flex;
+  gap: 2em;
+  margin-bottom: 2em;
+}
+
+.all_stats {
+  width: 100%;
+  margin-bottom: 2.5em;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #fff;
+  border-radius: 1em;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.loading,
+.error {
+  margin: 2em;
+  font-size: 1.5em;
+  text-align: center;
+}

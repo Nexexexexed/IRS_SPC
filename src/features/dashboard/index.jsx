@@ -1,44 +1,106 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import { Box, Button, Typography, Paper, Grid } from "@mui/material";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { loadStats } from "../../store/slices/statSlice";
+import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
+import Card from "../../components/UI/Card/Card";
+import "./Dashboard.css";
+
+const COLORS = ["#0088FE", "#FF8042", "#00C49F", "#FFBB28"];
 
 const Dashboard = () => {
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { data, loading, error } = useSelector((state) => state.stats);
+
+  useEffect(() => {
+    dispatch(loadStats());
+  }, [dispatch]);
+
+  if (loading) return <p className="loading">Загрузка статистики...</p>;
+  if (error) return <p className="error">Ошибка: {error}</p>;
+  if (!data) return null;
+
+  const genderData = [
+    { name: "Мужчины", value: data.gender.male },
+    { name: "Женщины", value: data.gender.female },
+  ];
+
+  const ageData = Object.entries(data.ageGroups).map(([name, value]) => ({
+    name,
+    value,
+  }));
+  const statusData = Object.entries(data.status).map(([name, value]) => ({
+    name,
+    value,
+  }));
 
   return (
-    <Box sx={{ p: 3 }}>
-      <Typography variant="h4" component="h1" gutterBottom>
-        Дашборд системы
-      </Typography>
+    <div className="container">
+      <div className=" flex-gap mb-2 all_stats">
+        <Card>
+          <h2>Общая статистика</h2>
+          <p>
+            Всего граждан:
+            <span className="total">{data.total.toLocaleString("ru-RU")}</span>
+          </p>
+        </Card>
+      </div>
 
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={6}>
-          <Paper sx={{ p: 3, textAlign: "center" }}>
-            <Typography variant="h6" gutterBottom>
-              Управление гражданами
-            </Typography>
-            <Button
-              variant="contained"
-              onClick={() => navigate("/citizens")}
-              size="large"
+      <div className="flex flex-gap" style={{ flexWrap: "wrap" }}>
+        <Card style={{ minWidth: "250px", flex: "1" }}>
+          <h3>Распределение по полу</h3>
+          <PieChart width={300} height={250}>
+            <Pie
+              data={genderData}
+              dataKey="value"
+              nameKey="name"
+              outerRadius={100}
             >
-              Перейти к картотеке
-            </Button>
-          </Paper>
-        </Grid>
+              {genderData.map((_, i) => (
+                <Cell key={i} fill={COLORS[i % COLORS.length]} />
+              ))}
+            </Pie>
+            <Tooltip />
+            <Legend />
+          </PieChart>
+        </Card>
 
-        <Grid item xs={12} md={6}>
-          <Paper sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom>
-              Статистика
-            </Typography>
-            <Typography>Всего граждан: 150,000</Typography>
-            <Typography>Мужчины: 75,000</Typography>
-            <Typography>Женщины: 75,000</Typography>
-          </Paper>
-        </Grid>
-      </Grid>
-    </Box>
+        <Card style={{ minWidth: "250px", flex: "1" }}>
+          <h3>Возрастные группы</h3>
+          <PieChart width={300} height={250}>
+            <Pie
+              data={ageData}
+              dataKey="value"
+              nameKey="name"
+              outerRadius={100}
+            >
+              {ageData.map((_, i) => (
+                <Cell key={i} fill={COLORS[i % COLORS.length]} />
+              ))}
+            </Pie>
+            <Tooltip />
+            <Legend />
+          </PieChart>
+        </Card>
+
+        <Card style={{ minWidth: "250px", flex: "1" }}>
+          <h3>Статусы</h3>
+          <PieChart width={300} height={250}>
+            <Pie
+              data={statusData}
+              dataKey="value"
+              nameKey="name"
+              outerRadius={100}
+            >
+              {statusData.map((_, i) => (
+                <Cell key={i} fill={COLORS[i % COLORS.length]} />
+              ))}
+            </Pie>
+            <Tooltip />
+            <Legend />
+          </PieChart>
+        </Card>
+      </div>
+    </div>
   );
 };
 

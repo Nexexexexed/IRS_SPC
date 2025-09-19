@@ -1,15 +1,7 @@
-import React, { useState } from "react";
-import {
-  Box,
-  TextField,
-  MenuItem,
-  Button,
-  Paper,
-  Grid,
-  InputLabel,
-  FormControl,
-  Select,
-} from "@mui/material";
+import { useState } from "react";
+import Input from "../../../components/UI/Input/Input";
+import Button from "../../../components/UI/Button/Button";
+import "./Filter.css";
 
 const Filters = ({ onFilterChange }) => {
   const [filters, setFilters] = useState({
@@ -18,100 +10,49 @@ const Filters = ({ onFilterChange }) => {
     status: "",
   });
 
-  const handleFilterChange = (field, value) => {
+  const handleChange = (field, value) => {
     const newFilters = { ...filters, [field]: value };
     setFilters(newFilters);
     onFilterChange(newFilters);
   };
 
-  const handleClearFilters = () => {
-    const clearedFilters = {
-      search: "",
-      gender: "",
-      status: "",
-    };
-    setFilters(clearedFilters);
-    onFilterChange(clearedFilters);
+  const clearFilters = () => {
+    const cleared = { search: "", gender: "", status: "" };
+    setFilters(cleared);
+    onFilterChange(cleared);
   };
 
   return (
-    <Paper sx={{ p: 2, mb: 2 }}>
-      <Grid container spacing={2} alignItems="end">
-        <Grid item xs={12} md={4}>
-          <TextField
-            fullWidth
-            label="Поиск по ФИО"
-            value={filters.search}
-            onChange={(e) => handleFilterChange("search", e.target.value)}
-            placeholder="Введите фамилию или имя"
-          />
-        </Grid>
+    <div className="filters">
+      <Input
+        placeholder="Поиск по ФИО"
+        value={filters.search}
+        onChange={(e) => handleChange("search", e.target.value)}
+      />
 
-        <Grid item xs={12} md={2}>
-          <FormControl fullWidth>
-            <InputLabel shrink={filters.gender !== ""} id="gender-label">
-              Пол
-            </InputLabel>
-            <Select
-              labelId="gender-label"
-              label="Пол"
-              value={filters.gender}
-              onChange={(e) => handleFilterChange("gender", e.target.value)}
-              displayEmpty
-              renderValue={(selected) => {
-                if (selected === "") {
-                  return <span style={{ color: "#999" }}>Все</span>;
-                }
-                return selected;
-              }}
-              sx={{ minWidth: 120 }}
-            >
-              <MenuItem value="">Все</MenuItem>
-              <MenuItem value="Мужской">Мужской</MenuItem>
-              <MenuItem value="Женский">Женский</MenuItem>
-            </Select>
-          </FormControl>
-        </Grid>
+      <select
+        value={filters.gender}
+        onChange={(e) => handleChange("gender", e.target.value)}
+      >
+        <option value="">Все полы</option>
+        <option value="Мужской">Мужской</option>
+        <option value="Женский">Женский</option>
+      </select>
 
-        <Grid item xs={12} md={2}>
-          <FormControl fullWidth>
-            <InputLabel shrink={filters.status !== ""} id="status-label">
-              Статус
-            </InputLabel>
-            <Select
-              labelId="status-label"
-              label="Статус"
-              value={filters.status}
-              onChange={(e) => handleFilterChange("status", e.target.value)}
-              displayEmpty
-              renderValue={(selected) => {
-                if (selected === "") {
-                  return <span style={{ color: "#999" }}>Все</span>;
-                }
-                return selected;
-              }}
-              sx={{ minWidth: 140 }}
-            >
-              <MenuItem value="">Все</MenuItem>
-              <MenuItem value="Активен">Активен</MenuItem>
-              <MenuItem value="Неактивен">Неактивен</MenuItem>
-              <MenuItem value="В процессе">В процессе</MenuItem>
-            </Select>
-          </FormControl>
-        </Grid>
+      <select
+        value={filters.status}
+        onChange={(e) => handleChange("status", e.target.value)}
+      >
+        <option value="">Все статусы</option>
+        <option value="Активен">Активен</option>
+        <option value="Неактивен">Неактивен</option>
+        <option value="В процессе">В процессе</option>
+      </select>
 
-        <Grid item xs={12} md={2}>
-          <Button
-            fullWidth
-            variant="outlined"
-            onClick={handleClearFilters}
-            sx={{ height: "56px" }}
-          >
-            Очистить
-          </Button>
-        </Grid>
-      </Grid>
-    </Paper>
+      <Button variant="outline" onClick={clearFilters}>
+        Очистить
+      </Button>
+    </div>
   );
 };
 
