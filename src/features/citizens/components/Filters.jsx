@@ -1,57 +1,133 @@
 import { useState } from "react";
+import Select from "../../../components/UI/Select/Select";
 import Input from "../../../components/UI/Input/Input";
 import Button from "../../../components/UI/Button/Button";
 import "./Filter.css";
 
-const Filters = ({ onFilterChange }) => {
+const Filters = ({ onFilterChange, onClearFilters }) => {
   const [filters, setFilters] = useState({
     search: "",
     gender: "",
     status: "",
+    ageFrom: "",
+    ageTo: "",
+    maritalStatus: "",
+    education: "",
   });
 
-  const handleChange = (field, value) => {
+  const genderOptions = [
+    { value: "Мужской", label: "Мужской" },
+    { value: "Женский", label: "Женский" },
+  ];
+
+  const statusOptions = [
+    { value: "Активен", label: "Активен" },
+    { value: "Неактивен", label: "Неактивен" },
+    { value: "В процессе", label: "В процессе" },
+  ];
+
+  const maritalStatusOptions = [
+    { value: "Холост/Не замужем", label: "Холост/Не замужем" },
+    { value: "Женат/Замужем", label: "Женат/Замужем" },
+    { value: "Разведен(а)", label: "Разведен(а)" },
+    { value: "Вдовец/Вдова", label: "Вдовец/Вдова" },
+  ];
+
+  const educationOptions = [
+    { value: "Среднее общее", label: "Среднее общее" },
+    { value: "Среднее профессиональное", label: "Среднее профессиональное" },
+    { value: "Неполное высшее", label: "Неполное высшее" },
+    { value: "Бакалавр", label: "Бакалавр" },
+    { value: "Специалист", label: "Специалист" },
+    { value: "Магистр", label: "Магистр" },
+  ];
+
+  const handleFilterChange = (field, value) => {
     const newFilters = { ...filters, [field]: value };
     setFilters(newFilters);
     onFilterChange(newFilters);
   };
 
-  const clearFilters = () => {
-    const cleared = { search: "", gender: "", status: "" };
-    setFilters(cleared);
-    onFilterChange(cleared);
+  const handleClearFilters = () => {
+    const clearedFilters = {
+      search: "",
+      gender: "",
+      status: "",
+      ageFrom: "",
+      ageTo: "",
+      maritalStatus: "",
+      education: "",
+    };
+    setFilters(clearedFilters);
+    onClearFilters();
   };
 
   return (
-    <div className="filters">
+    <div className="filters-container">
       <Input
-        placeholder="Поиск по ФИО"
+        label="Поиск по ФИО"
+        placeholder="Фамилия, Имя или Отчество"
         value={filters.search}
-        onChange={(e) => handleChange("search", e.target.value)}
+        onChange={(e) => handleFilterChange("search", e.target.value)}
       />
 
-      <select
+      <Select
+        label="Пол"
         value={filters.gender}
-        onChange={(e) => handleChange("gender", e.target.value)}
-      >
-        <option value="">Все полы</option>
-        <option value="Мужской">Мужской</option>
-        <option value="Женский">Женский</option>
-      </select>
+        onChange={(e) => handleFilterChange("gender", e.target.value)}
+        options={genderOptions}
+        placeholder="Все"
+      />
 
-      <select
+      <Select
+        label="Статус"
         value={filters.status}
-        onChange={(e) => handleChange("status", e.target.value)}
-      >
-        <option value="">Все статусы</option>
-        <option value="Активен">Активен</option>
-        <option value="Неактивен">Неактивен</option>
-        <option value="В процессе">В процессе</option>
-      </select>
+        onChange={(e) => handleFilterChange("status", e.target.value)}
+        options={statusOptions}
+        placeholder="Все"
+      />
 
-      <Button variant="outline" onClick={clearFilters}>
-        Очистить
-      </Button>
+      <div className="inputs_number">
+        <Input
+          label="Возраст от"
+          type="number"
+          value={filters.ageFrom}
+          onChange={(e) => handleFilterChange("ageFrom", e.target.value)}
+          min="18"
+          max="100"
+        />
+
+        <Input
+          label="до"
+          type="number"
+          value={filters.ageTo}
+          onChange={(e) => handleFilterChange("ageTo", e.target.value)}
+          min="18"
+          max="100"
+        />
+      </div>
+
+      <Select
+        label="Семейное положение"
+        value={filters.maritalStatus}
+        onChange={(e) => handleFilterChange("maritalStatus", e.target.value)}
+        options={maritalStatusOptions}
+        placeholder="Все"
+      />
+
+      <Select
+        label="Образование"
+        value={filters.education}
+        onChange={(e) => handleFilterChange("education", e.target.value)}
+        options={educationOptions}
+        placeholder="Все"
+      />
+
+      <div className="filter-button-group">
+        <Button onClick={handleClearFilters} variant="outline">
+          Очистить
+        </Button>
+      </div>
     </div>
   );
 };

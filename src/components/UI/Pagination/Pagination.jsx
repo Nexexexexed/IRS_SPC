@@ -7,7 +7,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         disabled={currentPage === 0}
         onClick={() => onPageChange(currentPage - 1)}
       >
-        ←
+        &lt;
       </button>
       <span>
         {currentPage + 1} / {totalPages}
@@ -16,7 +16,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         disabled={currentPage + 1 >= totalPages}
         onClick={() => onPageChange(currentPage + 1)}
       >
-        →
+        &gt;
       </button>
     </div>
   );

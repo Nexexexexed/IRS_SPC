@@ -1,13 +1,11 @@
-.filters {
+.filters-container {
   display: flex;
-  gap: 1rem;
-  margin-bottom: 1rem;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 0.5em;
 }
 
-.filters select {
-  padding: 0.5rem 1rem;
-  border-radius: var(--border-radius);
-  border: 1px solid #ccc;
-  font-size: 1rem;
+.inputs_number {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5em;
 }

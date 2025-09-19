@@ -30,11 +30,19 @@ const citizensSlice = createSlice({
       pageSize: 20,
       totalCount: 0,
     },
-    filters: {},
+    filters: {
+      search: "",
+      gender: "",
+      status: "",
+      ageFrom: "",
+      ageTo: "",
+      maritalStatus: "",
+      education: "",
+    },
   },
   reducers: {
     setFilters: (state, action) => {
-      state.filters = action.payload;
+      state.filters = { ...state.filters, ...action.payload };
       state.pagination.currentPage = 0;
     },
     setPagination: (state, action) => {
@@ -43,8 +51,18 @@ const citizensSlice = createSlice({
     clearCurrentCitizen: (state) => {
       state.currentCitizen = null;
     },
+    clearFilters: (state) => {
+      state.filters = {
+        search: "",
+        gender: "",
+        status: "",
+        ageFrom: "",
+        ageTo: "",
+        maritalStatus: "",
+        education: "",
+      };
+    },
   },
-
   extraReducers: (builder) => {
     builder
       .addCase(loadCitizens.pending, (state) => {
@@ -75,6 +93,6 @@ const citizensSlice = createSlice({
   },
 });
 
-export const { setFilters, setPagination, clearCurrentCitizen } =
+export const { setFilters, setPagination, clearCurrentCitizen, clearFilters } =
   citizensSlice.actions;
 export default citizensSlice.reducer;
